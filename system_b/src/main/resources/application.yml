@@ -1,0 +1,25 @@
+server:
+  port: 8001
+
+spring:
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML5
+    encoding: utf-8
+    servlet:
+      content-type: text/html
+    cache: false
+
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://47.102.211.70:3306/sso_db?useUnicode=true&useSSL=false
+    username: root
+    password: 123!@#
+
+mybatis:
+    mapperLocations: classpath:mapper/*Mapper.xml
+
+
+
+
