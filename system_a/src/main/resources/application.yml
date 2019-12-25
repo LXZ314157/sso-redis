@@ -1,5 +1,8 @@
 server:
   port: 8001
+  servlet:
+    session:
+      timeout: 600m
 
 spring:
   thymeleaf:
@@ -11,6 +14,20 @@ spring:
       content-type: text/html
     cache: false
 
+
+#redis配置
+  redis:
+    database: 15
+    host: 47.102.211.70
+    timeout: 60000ms
+    port: 6379
+    password: ibossabc
+    jedis:
+      pool:
+        max-active: 1000 # 连接池最大连接数（使用负值表示没有限制）
+        max-idle: 100 # 连接池中的最大空闲连接
+        min-idle: -1 # 连接池最大阻塞等待时间（使用负值表示没有限制）
+
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://47.102.211.70:3306/sso_db?useUnicode=true&useSSL=false
@@ -19,6 +36,10 @@ spring:
 
 mybatis:
     mapperLocations: classpath:mapper/*Mapper.xml
+
+#cookie配置
+redis:
+  cookiekey: loginuser
 
 
 
