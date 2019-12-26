@@ -1,0 +1,24 @@
+测试登录首页
+http://localhost:8001/
+http://localhost:8002/
+http://localhost:8001/test  测试拦截器
+
+cookie是一个token，反序列化后获取tokenId，根据tokenId
+获取redis中的token，并和cookie中的token比较
+
+A登录，保存cookie和redis、session；
+
+此时B登录
+    |---如果未禁用cookie
+	|---如果redis未超时，比较cookie和redis的值，如果一致则，则保存session，登录通过，否则重新登录
+	|---如果redis已超时，重新的登录
+    |---如果已禁用cookie，重新登录
+
+访问其它接口（方法）时，用拦截器检查session,如果session未超时则直接访问；
+如果已经超时则重新登录
+
+
+
+退出：清除cookie、session、redis
+
+一个用户在A网站退出以后，在B网站不能再登录
