@@ -6,7 +6,6 @@ import cn.com.lxz.system.a.service.UserService;
 import cn.com.lxz.system.a.util.AESUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -30,7 +29,7 @@ public class LoginController {
     @Value("${redis.cookiekey}")
     private String cookiekey;
 
-    @Autowired
+    @Resource
     private RedisTemplate<String,String> redisTemplate;
 
     @Resource
