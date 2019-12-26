@@ -1,6 +1,6 @@
-package cn.com.lxz.system.a.util;
+package cn.com.lxz.system.b.util;
 
-import cn.com.lxz.system.a.domain.TokenUser;
+import cn.com.lxz.system.b.domain.TokenUser;
 import com.alibaba.fastjson.JSON;
 
 /**

@@ -1,9 +1,9 @@
-package cn.com.lxz.system.a.controller;
+package cn.com.lxz.system.b.controller;
 
-import cn.com.lxz.system.a.common.Constant;
-import cn.com.lxz.system.a.domain.TokenUser;
-import cn.com.lxz.system.a.service.UserService;
-import cn.com.lxz.system.a.util.AESUtil;
+import cn.com.lxz.system.b.common.Constant;
+import cn.com.lxz.system.b.domain.TokenUser;
+import cn.com.lxz.system.b.service.UserService;
+import cn.com.lxz.system.b.util.AESUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class LoginController {
     private String cookiekey;
 
     @Autowired
-    private RedisTemplate<String,String> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
     @Resource
     private UserService userService;
@@ -123,5 +123,6 @@ public class LoginController {
         return "退出成功！";
 
     }
+
 
 }

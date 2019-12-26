@@ -1,8 +1,8 @@
-package cn.com.lxz.system.a.controller;
+package cn.com.lxz.system.b.controller;
 
 
-import cn.com.lxz.system.a.common.Constant;
-import cn.com.lxz.system.a.domain.TokenUser;
+import cn.com.lxz.system.b.common.Constant;
+import cn.com.lxz.system.b.domain.TokenUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +17,7 @@ public class IndexController {
 
     @GetMapping
     public String index(HttpServletRequest request){
+
         HttpSession session = request.getSession();
         if(session.getAttribute(Constant.SESSIONUSER)!=null){
             TokenUser token = (TokenUser)session.getAttribute(Constant.SESSIONUSER);

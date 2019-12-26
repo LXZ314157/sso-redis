@@ -2,7 +2,7 @@ server:
   port: 8001
   servlet:
     session:
-      timeout: 600m
+      timeout: PT1M
 
 spring:
   thymeleaf:
@@ -39,7 +39,7 @@ mybatis:
 
 #cookie配置
 redis:
-  cookiekey: loginuser
+  cookiekey: cookieuser
 
 
 

@@ -2,13 +2,8 @@ package cn.com.lxz.system.a.domain;
 
 import lombok.Data;
 
-/**
- * @author lvxuezhan
- * @date 2019/6/15
- * 封装token实体
- **/
 @Data
-public class Token {
+public class TokenUser {
 
     /**
      * 用户名
@@ -21,10 +16,8 @@ public class Token {
     private String password;
 
     /**
-     * 时间戳
+     * tokenId
      */
-    private String timestamp;
-
-
+    private String tokenId;
 
 }
