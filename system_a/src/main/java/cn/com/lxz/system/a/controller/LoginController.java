@@ -8,6 +8,7 @@ import cn.com.lxz.system.a.util.TokenUtil;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -18,6 +19,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class LoginController {
@@ -26,7 +30,7 @@ public class LoginController {
     private String cookiekey;
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
     @Resource
     private UserService userService;
@@ -36,19 +40,24 @@ public class LoginController {
         return "index";
     }
 
+
     @RequestMapping("/checklogin")
-    public ModelAndView login(HttpServletRequest request, String username, String password){
+    public ModelAndView login(HttpServletRequest request, HttpServletResponse response, String username, String password){
+        HttpSession session = request.getSession();
         Cookie[] cookies = request.getCookies();
         if(cookies!=null && cookies.length>0){
             for(Cookie cookie : cookies){
                 String cookiName = cookie.getName();
                 if(cookiName.equals(cookiekey)){
-                    if(redisTemplate.opsForValue().get(cookiekey)!=null){
-                        String encookie = redisTemplate.opsForValue().get(cookiekey).toString();
-                        Token tokenUser = JSON.parseObject(AESUtil.decrypt(encookie,Constant.TOKEN_SECRETKEY),Token.class);
+                    ListOperations listOperations = redisTemplate.opsForList();
+                    List<String> list =  listOperations.range(Constant.REDISUSER,0,-1);
+                    if(list.contains(cookie.getValue())){
+                        Token tokenUser = JSON.parseObject(AESUtil.decrypt(cookie.getValue(),Constant.TOKEN_SECRETKEY),Token.class);
                         if(tokenUser!=null){
                             if(cookiName.equals(tokenUser.getUsername())){
-                                request.getSession().setAttribute(Constant.SESSIONUSER,tokenUser);
+                                if(session.getAttribute(Constant.SESSIONUSER) == null){
+                                    session.setAttribute(Constant.SESSIONUSER,tokenUser);
+                                }
                                 return new ModelAndView("success");
                             }
                         }
@@ -61,7 +70,20 @@ public class LoginController {
             int count = userService.checkUser(username,password);
             if(count>0){
                 String newToken = TokenUtil.generateToken(username,password,Constant.TOKEN_SECRETKEY);
-                redisTemplate.opsForValue().set(cookiekey,newToken);
+                //本地添加cookie
+                Cookie cookie = new Cookie(cookiekey,newToken);
+                cookie.setDomain("localhost");
+                cookie.setPath("/");
+                cookie.setValue(newToken);
+                response.addCookie(cookie);
+
+                //redis添加user
+                ListOperations listOperations = redisTemplate.opsForList();
+                List<String> list =  listOperations.range(Constant.REDISUSER,0,-1);
+                if(!list.contains(newToken)){
+                    redisTemplate.opsForList().leftPush(Constant.REDISUSER,newToken);
+                }
+                //session添加user
                 Token tokenUser = new Token();
                 tokenUser.setUsername(username);
                 tokenUser.setPassword(password);
